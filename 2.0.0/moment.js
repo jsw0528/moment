@@ -16,9 +16,6 @@
     // internal storage for language config files
     languages = {},
 
-    // check for nodeJS
-    hasModule = (typeof module !== 'undefined' && module.exports),
-
     // ASP.NET json date format regex
     aspNetJsonRegex = /^\/?Date\((\-?\d+)/i,
 
@@ -502,9 +499,6 @@
   function getLangDefinition(key) {
     if (!key) {
       return moment.fn._lang;
-    }
-    if (!languages[key] && hasModule) {
-      require('./lang/' + key);
     }
     return languages[key];
   }
@@ -1380,10 +1374,6 @@
   ************************************/
 
 
-  // CommonJS module is defined
-  if (hasModule) {
-    module.exports = moment;
-  }
   /*global ender:false */
   if (typeof ender === 'undefined') {
     // here, `this` means `window` in the browser, or `global` on the server
