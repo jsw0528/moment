@@ -52,4 +52,11 @@
       return number + output
     }
   })
+
+  // support SeaJS
+  if (typeof seajs !== 'undefined') {
+    define('gallery/moment/2.0.0/i18n/en', [], function() {
+      return moment
+    })
+  }
 })(this.moment);
