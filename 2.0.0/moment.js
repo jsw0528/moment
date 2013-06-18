@@ -344,12 +344,10 @@
       }
     },
 
-    _months : "January_February_March_April_May_June_July_August_September_October_November_December".split("_"),
     months : function (m) {
       return this._months[m.month()];
     },
 
-    _monthsShort : "Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec".split("_"),
     monthsShort : function (m) {
       return this._monthsShort[m.month()];
     },
@@ -375,28 +373,18 @@
       }
     },
 
-    _weekdays : "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"),
     weekdays : function (m) {
       return this._weekdays[m.day()];
     },
 
-    _weekdaysShort : "Sun_Mon_Tue_Wed_Thu_Fri_Sat".split("_"),
     weekdaysShort : function (m) {
       return this._weekdaysShort[m.day()];
     },
 
-    _weekdaysMin : "Su_Mo_Tu_We_Th_Fr_Sa".split("_"),
     weekdaysMin : function (m) {
       return this._weekdaysMin[m.day()];
     },
 
-    _longDateFormat : {
-      LT : "h:mm A",
-      L : "MM/DD/YYYY",
-      LL : "MMMM D YYYY",
-      LLL : "MMMM D YYYY LT",
-      LLLL : "dddd, MMMM D YYYY LT"
-    },
     longDateFormat : function (key) {
       var output = this._longDateFormat[key];
       if (!output && this._longDateFormat[key.toUpperCase()]) {
@@ -408,42 +396,11 @@
       return output;
     },
 
-    meridiem : function (hours, minutes, isLower) {
-      if (hours > 11) {
-        return isLower ? 'pm' : 'PM';
-      } else {
-        return isLower ? 'am' : 'AM';
-      }
-    },
-
-    _calendar : {
-      sameDay : '[Today at] LT',
-      nextDay : '[Tomorrow at] LT',
-      nextWeek : 'dddd [at] LT',
-      lastDay : '[Yesterday at] LT',
-      lastWeek : '[last] dddd [at] LT',
-      sameElse : 'L'
-    },
     calendar : function (key, mom) {
       var output = this._calendar[key];
       return typeof output === 'function' ? output.apply(mom) : output;
     },
 
-    _relativeTime : {
-      future : "in %s",
-      past : "%s ago",
-      s : "a few seconds",
-      m : "a minute",
-      mm : "%d minutes",
-      h : "an hour",
-      hh : "%d hours",
-      d : "a day",
-      dd : "%d days",
-      M : "a month",
-      MM : "%d months",
-      y : "a year",
-      yy : "%d years"
-    },
     relativeTime : function (number, withoutSuffix, string, isFuture) {
       var output = this._relativeTime[string];
       return (typeof output === 'function') ?
@@ -454,11 +411,6 @@
       var format = this._relativeTime[diff > 0 ? 'future' : 'past'];
       return typeof format === 'function' ? format(output) : format.replace(/%s/i, output);
     },
-
-    ordinal : function (number) {
-      return this._ordinal.replace("%d", number);
-    },
-    _ordinal : "%d",
 
     preparse : function (string) {
       return string;
@@ -1349,24 +1301,6 @@
   }
 
   makeDurationAsGetter('Weeks', 6048e5);
-
-
-  /************************************
-    Default Lang
-  ************************************/
-
-
-  // Set default language, other languages will inherit from English.
-  moment.lang('en', {
-    ordinal : function (number) {
-      var b = number % 10,
-        output = (~~ (number % 100 / 10) === 1) ? 'th' :
-        (b === 1) ? 'st' :
-        (b === 2) ? 'nd' :
-        (b === 3) ? 'rd' : 'th';
-      return number + output;
-    }
-  });
 
 
   /************************************
