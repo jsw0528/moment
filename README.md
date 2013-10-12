@@ -5,8 +5,8 @@
 ### for Browser:
 
 ```html
-<script src="path/to/gallery/moment/2.0.0/moment.js"></script>
-<script src="path/to/gallery/moment/2.0.0/i18n/zh_cn.js"></script>
+<script src="path/to/gallery/moment/2.3.1/moment.js"></script>
+<script src="path/to/gallery/moment/2.3.1/i18n/zh_cn.js"></script>
 <script>
 console.log(
   moment().format('LLLL')
@@ -30,7 +30,7 @@ seajs.config({
 
 ```js
 define(function(require, exports, module) {
-  var moment = require('gallery/moment/2.0.0/moment')
+  var moment = require('gallery/moment/2.3.1/moment')
   seajs.log(
     moment().format('LLLL')
   )
@@ -40,7 +40,7 @@ define(function(require, exports, module) {
 or
 
 ```js
-seajs.use('gallery/moment/2.0.0/moment', function(moment) {
+seajs.use('gallery/moment/2.3.1/moment', function(moment) {
   seajs.log(
     moment().format('LLLL')
   )
