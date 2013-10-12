@@ -26,9 +26,6 @@
     // internal storage for language config files
     languages = {},
 
-    // check for nodeJS
-    hasModule = (typeof module !== 'undefined' && module.exports),
-
     // ASP.NET json date format regex
     aspNetJsonRegex = /^\/?Date\((\-?\d+)/i,
     aspNetTimeSpanJsonRegex = /(\-)?(?:(\d*)\.)?(\d+)\:(\d+)(?:\:(\d+)\.?(\d{3})?)?/,
@@ -563,7 +560,7 @@
   }
 
   function normalizeLanguage(key) {
-    return key ? key.toLowerCase().replace('_', '-') : key;
+    return key ? key.toLowerCase().replace('-', '_') : key;
   }
 
   /************************************
@@ -585,12 +582,10 @@
       }
     },
 
-    _months : "January_February_March_April_May_June_July_August_September_October_November_December".split("_"),
     months : function (m) {
       return this._months[m.month()];
     },
 
-    _monthsShort : "Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec".split("_"),
     monthsShort : function (m) {
       return this._monthsShort[m.month()];
     },
@@ -616,17 +611,14 @@
       }
     },
 
-    _weekdays : "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"),
     weekdays : function (m) {
       return this._weekdays[m.day()];
     },
 
-    _weekdaysShort : "Sun_Mon_Tue_Wed_Thu_Fri_Sat".split("_"),
     weekdaysShort : function (m) {
       return this._weekdaysShort[m.day()];
     },
 
-    _weekdaysMin : "Su_Mo_Tu_We_Th_Fr_Sa".split("_"),
     weekdaysMin : function (m) {
       return this._weekdaysMin[m.day()];
     },
@@ -652,13 +644,6 @@
       }
     },
 
-    _longDateFormat : {
-      LT : "h:mm A",
-      L : "MM/DD/YYYY",
-      LL : "MMMM D YYYY",
-      LLL : "MMMM D YYYY LT",
-      LLLL : "dddd, MMMM D YYYY LT"
-    },
     longDateFormat : function (key) {
       var output = this._longDateFormat[key];
       if (!output && this._longDateFormat[key.toUpperCase()]) {
@@ -677,42 +662,12 @@
     },
 
     _meridiemParse : /[ap]\.?m?\.?/i,
-    meridiem : function (hours, minutes, isLower) {
-      if (hours > 11) {
-        return isLower ? 'pm' : 'PM';
-      } else {
-        return isLower ? 'am' : 'AM';
-      }
-    },
 
-    _calendar : {
-      sameDay : '[Today at] LT',
-      nextDay : '[Tomorrow at] LT',
-      nextWeek : 'dddd [at] LT',
-      lastDay : '[Yesterday at] LT',
-      lastWeek : '[Last] dddd [at] LT',
-      sameElse : 'L'
-    },
     calendar : function (key, mom) {
       var output = this._calendar[key];
       return typeof output === 'function' ? output.apply(mom) : output;
     },
 
-    _relativeTime : {
-      future : "in %s",
-      past : "%s ago",
-      s : "a few seconds",
-      m : "a minute",
-      mm : "%d minutes",
-      h : "an hour",
-      hh : "%d hours",
-      d : "a day",
-      dd : "%d days",
-      M : "a month",
-      MM : "%d months",
-      y : "a year",
-      yy : "%d years"
-    },
     relativeTime : function (number, withoutSuffix, string, isFuture) {
       var output = this._relativeTime[string];
       return (typeof output === 'function') ?
@@ -779,11 +734,6 @@
   function getLangDefinition(key) {
     var i = 0, j, lang, next, split,
       get = function (k) {
-        if (!languages[k] && hasModule) {
-          try {
-            require('./lang/' + k);
-          } catch (e) { }
-        }
         return languages[k];
       };
 
@@ -801,15 +751,15 @@
     }
 
     //pick the language from the array
-    //try ['en-au', 'en-gb'] as 'en-au', 'en-gb', 'en', as in move through the list trying each
+    //try ['en_au', 'en_gb'] as 'en_au', 'en_gb', 'en', as in move through the list trying each
     //substring from most specific to least, but move to the next array item if it's a more specific variant than the current root
     while (i < key.length) {
-      split = normalizeLanguage(key[i]).split('-');
+      split = normalizeLanguage(key[i]).split('_');
       j = split.length;
       next = normalizeLanguage(key[i + 1]);
-      next = next ? next.split('-') : null;
+      next = next ? next.split('_') : null;
       while (j > 0) {
-        lang = get(split.slice(0, j).join('-'));
+        lang = get(split.slice(0, j).join('_'));
         if (lang) {
           return lang;
         }
@@ -1723,6 +1673,8 @@
       ];
     },
 
+    toInt : toInt,
+
     isValid : function () {
       return isValid(this);
     },
@@ -2237,53 +2189,19 @@
     return (+this - this.years() * 31536e6) / 2592e6 + this.years() * 12;
   };
 
-
-  /************************************
-    Default Lang
-  ************************************/
-
-
-  // Set default language, other languages will inherit from English.
-  moment.lang('en', {
-    ordinal : function (number) {
-      var b = number % 10,
-        output = (toInt(number % 100 / 10) === 1) ? 'th' :
-        (b === 1) ? 'st' :
-        (b === 2) ? 'nd' :
-        (b === 3) ? 'rd' : 'th';
-      return number + output;
-    }
-  });
-
   /* EMBED_LANGUAGES */
 
   /************************************
     Exposing Moment
   ************************************/
 
-  function makeGlobal() {
-    /*global ender:false */
-    if (typeof ender === 'undefined') {
-      // here, `this` means `window` in the browser, or `global` on the server
-      // add `moment` as a global object via a string identifier,
-      // for Closure Compiler "advanced" mode
-      this['moment'] = moment;
-    }
-  }
+  // Support Browser
+  this['moment'] = moment;
 
-  // CommonJS module is defined
-  if (hasModule) {
-    module.exports = moment;
-    makeGlobal();
-  } else if (typeof define === "function" && define.amd) {
-    define("moment", function (require, exports, module) {
-      if (module.config().noGlobal !== true) {
-        makeGlobal();
-      }
-
-      return moment;
-    });
-  } else {
-    makeGlobal();
+  // Support SeaJS
+  if (typeof seajs !== 'undefined') {
+    define('gallery/moment/2.3.1/moment', ['./i18n/{locale}'], function(require) {
+      return require('./i18n/{locale}')
+    })
   }
 }).call(this);

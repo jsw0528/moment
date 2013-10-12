@@ -1,17 +1,5 @@
-// moment.js language configuration
-// language : chinese
-// author : suupic : https://github.com/suupic
-
-(function (factory) {
-  if (typeof define === 'function' && define.amd) {
-    define(['moment'], factory); // AMD
-  } else if (typeof exports === 'object') {
-    module.exports = factory(require('../moment')); // Node
-  } else {
-    factory(window.moment); // Browser global
-  }
-}(function (moment) {
-  return moment.lang('zh_cn', {
+(function(moment) {
+  moment.lang('zh_cn', {
     months : '一月_二月_三月_四月_五月_六月_七月_八月_九月_十月_十一月_十二月'.split('_'),
     monthsShort : '1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月'.split('_'),
     weekdays : '星期日_星期一_星期二_星期三_星期四_星期五_星期六'.split('_'),
@@ -26,9 +14,9 @@
       l : 'YYYY年MMMD日',
       ll : 'YYYY年MMMD日',
       lll : 'YYYY年MMMD日LT',
-      llll : 'YYYY年MMMD日ddddLT'
+      llll : 'YYYY年MMMD日dddLT'
     },
-    meridiem : function (hour, minute, isLower) {
+    meridiem : function (hour, minute) {
       var hm = hour * 100 + minute;
       if (hm < 900) {
         return '早上';
@@ -81,4 +69,11 @@
       yy : '%d年'
     }
   });
-}));
+
+  // Support SeaJS
+  if (typeof seajs !== 'undefined') {
+    define('gallery/moment/2.3.1/i18n/zh_cn', [], function() {
+      return moment
+    })
+  }
+})(this.moment);
